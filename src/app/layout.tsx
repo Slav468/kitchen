@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/UI/Header';
+import { siteConfig } from '@/config/site.config';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: 'Татарская кухня',
-	description: 'Рецепты татарской кухни',
+	title: siteConfig.title,
+	description: siteConfig.description,
 };
 
 export default function RootLayout({
@@ -30,7 +31,15 @@ export default function RootLayout({
 		>
 			<body className='min-h-full flex flex-col'>
 				<Header />
-				{children}
+
+				<main className='flex flex-col grow'>{children}</main>
+
+				<footer>
+					<p className='text-center text-gray-500 text-sm pt-6 pb-3'>
+						&copy; {new Date().getFullYear()} {siteConfig.title}. Все права
+						защищены.
+					</p>
+				</footer>
 			</body>
 		</html>
 	);

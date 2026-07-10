@@ -3,6 +3,8 @@
 import { Link } from '@heroui/react';
 import Image from 'next/image';
 
+import { siteConfig } from '@/config/site.config';
+
 export function Logo() {
 	return (
 		<Link
@@ -11,12 +13,12 @@ export function Logo() {
 		>
 			<Image
 				src='/logo.png'
-				alt='Logo татарская кухня'
+				alt={`${siteConfig.title} Logo`}
 				width={48}
 				height={48}
 			/>
 			<span className='hidden sm:inline font-bold text-lg text-gray-900'>
-				Татарская кухня
+				{siteConfig.title}
 			</span>
 		</Link>
 	);

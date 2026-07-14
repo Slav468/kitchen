@@ -28,7 +28,7 @@ export default function AuthModal() {
 
 			<Modal.Backdrop>
 				<Modal.Container>
-					<Modal.Dialog className='sm:max-w-[400px]'>
+					<Modal.Dialog className='sm:max-w-100'>
 						<Modal.CloseTrigger />
 						<Modal.Header>
 							<Modal.Heading className='text-center *:text-lg text-background'>

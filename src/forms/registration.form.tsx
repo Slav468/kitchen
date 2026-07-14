@@ -44,6 +44,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
 		>
 			<TextField
 				isRequired
+				aria-label='Email'
 				name='email'
 				type='email'
 				className='w-full'
@@ -60,6 +61,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
 
 			<TextField
 				isRequired
+				aria-label='Пароль'
 				name='password'
 				type='password'
 				className='w-full'
@@ -76,6 +78,7 @@ const RegistrationForm = ({ onClose }: IProps) => {
 
 			<TextField
 				isRequired
+				aria-label='Подтверждение пароля'
 				name='confirmPassword'
 				type='password'
 				className='w-full'

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type SyntheticEvent } from 'react';
 
 export function useAuthSubmit<T extends object>(
 	initialData: T,
@@ -12,7 +12,7 @@ export function useAuthSubmit<T extends object>(
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {

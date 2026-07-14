@@ -1,81 +1,118 @@
 'use client';
 
-import { Button, Form, Input } from '@heroui/react';
-import { useState } from 'react';
+import {
+	Button,
+	FieldError,
+	Form,
+	Input,
+	Spinner,
+	TextField,
+} from '@heroui/react';
+import { useAuthSubmit } from './useAuthSubmit';
+import {
+	validateConfirmPassword,
+	validateEmail,
+	validateNewPassword,
+} from './validation';
+import { RegistrationData } from '../types/index';
 
 interface IProps {
 	onClose: () => void;
 }
 
+const INITIAL_DATA: RegistrationData = {
+	email: '',
+	password: '',
+	confirmPassword: '',
+};
+
 const RegistrationForm = ({ onClose }: IProps) => {
-	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
-		confirmPassword: '',
-	});
-
-	const validateEmail = (email: string) => {
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return emailRegex.test(email);
-	};
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-
-		onClose();
-	};
+	const { formData, setField, isSubmitting, handleSubmit } =
+		useAuthSubmit<RegistrationData>(
+			INITIAL_DATA,
+			async (data) => {
+				// TODO: реальный вызов API регистрации
+				console.log('register', data);
+			},
+			onClose,
+		);
 
 	return (
 		<Form
-			className='w-full'
+			className='w-full flex flex-col gap-2'
 			onSubmit={handleSubmit}
 		>
-			<Input
-				aria-label='Email'
-				required
+			<TextField
+				isRequired
 				name='email'
-				placeholder='Введите email'
 				type='email'
-				value={formData.email}
-				onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-				validate={(value: string) => {
-					if (!value) return 'Почта обязательна';
-					if (!validateEmail(value)) return 'Некорректный email';
-					return null;
-				}}
-			/>
-			<Input
-				required
+				className='w-full'
+				validate={validateEmail}
+			>
+				<Input
+					aria-label='Email'
+					placeholder='Введите email'
+					value={formData.email}
+					onChange={(e) => setField('email', e.target.value)}
+				/>
+				<FieldError />
+			</TextField>
+
+			<TextField
+				isRequired
 				name='password'
-				placeholder='Введите пароль'
 				type='password'
-				value={formData.password}
-				onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-				validate={(value: string) => {
-					if (!value) return 'Пароль обязателен';
-					if (value.length < 6) return 'Пароль должен быть не менее 6 символов';
-					return null;
-				}}
-			/>
-			<Input
-				required
+				className='w-full'
+				validate={validateNewPassword}
+			>
+				<Input
+					aria-label='Пароль'
+					placeholder='Введите пароль'
+					value={formData.password}
+					onChange={(e) => setField('password', e.target.value)}
+				/>
+				<FieldError />
+			</TextField>
+
+			<TextField
+				isRequired
 				name='confirmPassword'
-				placeholder='Подтвердите пароль'
 				type='password'
-				value={formData.confirmPassword}
-				onChange={(e) =>
-					setFormData({ ...formData, confirmPassword: e.target.value })
-				}
-				validate={(value: string) => {
-					if (!value) return 'Пароль для подтверждения обязателен';
-					if (value !== formData.password) return 'Пароли не совпадают';
-					return null;
-				}}
-			/>
+				className='w-full'
+				validate={(value) => validateConfirmPassword(value, formData.password)}
+			>
+				<Input
+					aria-label='Подтверждение пароля'
+					placeholder='Подтвердите пароль'
+					value={formData.confirmPassword}
+					onChange={(e) => setField('confirmPassword', e.target.value)}
+				/>
+				<FieldError />
+			</TextField>
 
 			<div className='flex w-full gap-4 items-center pt-8 justify-end'>
-				<Button onPress={onClose}>Отмена</Button>
-				<Button type='submit'>Зарегистрироваться</Button>
+				<Button
+					onPress={onClose}
+					isDisabled={isSubmitting}
+				>
+					Отмена
+				</Button>
+				<Button
+					type='submit'
+					isPending={isSubmitting}
+				>
+					{({ isPending }) => (
+						<>
+							{isPending && (
+								<Spinner
+									color='current'
+									size='sm'
+								/>
+							)}
+							{isPending ? 'Отправка...' : 'Зарегистрироваться'}
+						</>
+					)}
+				</Button>
 			</div>
 		</Form>
 	);

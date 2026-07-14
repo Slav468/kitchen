@@ -37,3 +37,14 @@ export interface Category {
 	slug: string;
 	icon?: string;
 }
+
+export interface Credentials {
+	email: string;
+	password: string;
+}
+
+export type LoginData = Credentials;
+
+export interface RegistrationData extends Credentials {
+	confirmPassword: string;
+}

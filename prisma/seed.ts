@@ -2,6 +2,7 @@ import { PrismaClient } from '../generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config({ path: '.env' });
 
@@ -10,6 +11,30 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+	// Seed users
+	const adminPassword = await bcrypt.hash('admin123', 10);
+	const editorPassword = await bcrypt.hash('editor123', 10);
+
+	const admin = await prisma.user.upsert({
+		where: { email: 'admin@kitchen.ru' },
+		update: {},
+		create: {
+			email: 'admin@kitchen.ru',
+			password: adminPassword,
+			role: 'ADMIN',
+		},
+	});
+
+	const editor = await prisma.user.upsert({
+		where: { email: 'editor@kitchen.ru' },
+		update: {},
+		create: {
+			email: 'editor@kitchen.ru',
+			password: editorPassword,
+			role: 'EDITOR',
+		},
+	});
+
 	// Seed ingredients
 	const tomato = await prisma.ingredient.upsert({
 		where: { id: 'seed-tomato' },
@@ -65,6 +90,10 @@ async function main() {
 	});
 
 	console.log('✅ Seed complete:', {
+		admin: admin.email,
+		adminRole: admin.role,
+		editor: editor.email,
+		editorRole: editor.role,
 		tomato: tomato.name,
 		chicken: chicken.name,
 		recipe: recipe.name,

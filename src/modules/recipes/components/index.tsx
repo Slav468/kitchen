@@ -1,8 +1,9 @@
+'use client';
+
 /**
  * Recipes components - placeholder for recipe components
  */
-export { RecipesList };
 
-function RecipesList() {
+export function RecipesList() {
 	return <div>RecipesList Component</div>;
 }

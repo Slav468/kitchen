@@ -1,8 +1,9 @@
+'use client';
+
 /**
  * Ingredients components - placeholder for ingredient components
  */
-export { IngredientsList };
 
-function IngredientsList() {
+export function IngredientsList() {
 	return <div>IngredientsList Component</div>;
 }

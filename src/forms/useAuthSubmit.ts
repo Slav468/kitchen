@@ -7,26 +7,29 @@ export function useAuthSubmit<T extends object>(
 ) {
 	const [formData, setFormData] = useState<T>(initialData);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const setField = <K extends keyof T>(name: K, value: T[K]) => {
 		setFormData((prev) => ({ ...prev, [name]: value }));
+		setError(null);
 	};
 
 	const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setError(null);
 
 		try {
 			setIsSubmitting(true);
 			await onSubmit(formData);
 			setFormData(initialData);
 			onClose();
-		} catch (error) {
-			// TODO: показать общую ошибку формы (например, errors.form с сервера)
-			console.error(error);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : 'Произошла ошибка';
+			setError(message);
 		} finally {
 			setIsSubmitting(false);
 		}
 	};
 
-	return { formData, setField, isSubmitting, handleSubmit };
+	return { formData, setField, isSubmitting, error, handleSubmit };
 }

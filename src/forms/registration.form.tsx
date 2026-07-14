@@ -15,6 +15,7 @@ import {
 	validateNewPassword,
 } from './validation';
 import { RegistrationData } from '../types/index';
+import { useAuth } from '@/hooks/useAuth';
 
 interface IProps {
 	onClose: () => void;
@@ -27,12 +28,13 @@ const INITIAL_DATA: RegistrationData = {
 };
 
 const RegistrationForm = ({ onClose }: IProps) => {
-	const { formData, setField, isSubmitting, handleSubmit } =
+	const { register } = useAuth();
+
+	const { formData, setField, isSubmitting, error, handleSubmit } =
 		useAuthSubmit<RegistrationData>(
 			INITIAL_DATA,
 			async (data) => {
-				// TODO: реальный вызов API регистрации
-				console.log('register', data);
+				await register(data.email, data.password);
 			},
 			onClose,
 		);
@@ -42,6 +44,11 @@ const RegistrationForm = ({ onClose }: IProps) => {
 			className='w-full flex flex-col gap-2'
 			onSubmit={handleSubmit}
 		>
+			{error && (
+				<div className='bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3'>
+					{error}
+				</div>
+			)}
 			<TextField
 				isRequired
 				aria-label='Email'

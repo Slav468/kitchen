@@ -1,8 +1,9 @@
+'use client';
+
 /**
  * Categories components - placeholder for category components
  */
-export { CategoriesList };
 
-function CategoriesList() {
+export function CategoriesList() {
 	return <div>CategoriesList Component</div>;
 }
